@@ -1,0 +1,333 @@
+// import 'dart:io';
+
+// import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:video_player/video_player.dart';
+// import 'package:whatsapp_clone/screens/camera_view.dart';
+
+// class CheckCameraPage extends StatefulWidget {
+//   const CheckCameraPage({super.key});
+
+//   @override
+//   State<CheckCameraPage> createState() => _CheckCameraPageState();
+// }
+
+// class _CheckCameraPageState extends State<CheckCameraPage> {
+//   File? _image;
+//   File? _video;
+//   VideoPlayerController? _controller;
+//   bool _isVideo = false;
+//   bool _cameraTried = false;
+//   final ImagePicker picker = ImagePicker();
+
+//     //final XFile? video;
+//   // @override
+//   // void initState() {
+//   //   // TODO: implement initState
+//   //   super.initState();
+//   //   _openCamera();
+//   // }
+//   bool _initialized = false;
+
+// @override
+// void didChangeDependencies() {
+//   super.didChangeDependencies();
+//   if (!_initialized) {
+//     _initialized = true;
+//     // Call your function that uses context here
+//     _pickImageFromCamera();
+//   }
+// }
+
+//   Future<void> _openCamera() async {
+//     final ImagePicker picker = ImagePicker();
+
+//     // Show dialog to choose between photo and video
+//     final result = await showDialog<String>(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: Text('Capture'),
+//         content: Text('Take a photo or record a video?'),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.pop(context, 'photo'),
+//             child: Text('Photo'),
+//           ),
+//           TextButton(
+//             onPressed: () => Navigator.pop(context, 'video'),
+//             child: Text('Video'),
+//           ),
+//           TextButton(
+//             onPressed: () => Navigator.pop(context, 'cancel'),
+//             child: Text('Cancel'),
+//           ),
+//         ],
+//       ),
+//     );
+//     if (result == 'photo') {
+//       final XFile? pickedFile = await picker.pickImage(
+//         source: ImageSource.camera,
+//       );
+//       if (pickedFile != null && mounted) {
+//         setState(() {
+//           _image = File(pickedFile.path);
+//           _isVideo = false;
+//           _cameraTried = true;
+//         });
+//       } else {
+//         if (mounted) Navigator.pop(context);
+//       }
+//     } else if (result == 'video') {
+//       final XFile? pickedFile = await picker.pickVideo(
+//         source: ImageSource.camera,
+//       );
+//       if (pickedFile != null && mounted) {
+//         _controller = VideoPlayerController.file(File(pickedFile.path));
+//         await _controller!.initialize();
+//         _controller!.play();
+//         setState(() {
+//           _video = File(pickedFile.path);
+//           _isVideo = true;
+//           _cameraTried = true;
+//         });
+//       } else {
+//         if (mounted) Navigator.pop(context);
+//       }
+//     } else {
+//       if (mounted) Navigator.pop(context);
+//     }
+//   }
+
+//   @override
+//   void disponse() {
+//     _controller?.dispose();
+//     super.dispose();
+//   }
+
+//     Widget _buildVideoPlayer() {
+//     if (_controller == null || !_controller!.value.isInitialized) {
+//       return const Center(child: CircularProgressIndicator());
+//     }
+//     return Stack(
+//       alignment: Alignment.center,
+//       children: [
+//         AspectRatio(
+//           aspectRatio: _controller!.value.aspectRatio,
+//           child: VideoPlayer(_controller!),
+//         ),
+//         GestureDetector(
+//           onTap: () {
+//             setState(() {
+//               if (_controller!.value.isPlaying) {
+//                 _controller!.pause();
+//               } else {
+//                 _controller!.play();
+//               }
+//             });
+//           },
+//           child: Icon(
+//             _controller!.value.isPlaying ? Icons.pause_circle : Icons.play_circle,
+//             color: Colors.white,
+//             size: 64,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     if (!_cameraTried) {
+//       // While waiting for camera, show nothing or a loader
+//       return const Scaffold(
+//         backgroundColor: Colors.black,
+//         body: Center(child: CircularProgressIndicator()),
+//       );
+//     }
+
+//     return 
+//     Scaffold(
+//       backgroundColor: Colors.black,
+//       appBar: AppBar(
+//         backgroundColor: Colors.black,
+//         title: Text('Preview'),
+//       ),
+//       body: Center(
+//         child: _isVideo
+//             ? _buildVideoPlayer()
+//             : _image != null
+//                 ? Image.file(_image!)
+//                 : const Text('No media captured', style: TextStyle(color: Colors.white)),
+//       ),
+//     );
+//     // Scaffold(
+//     //   appBar: AppBar(
+//     //     title: Text('Check Camera Page'),
+//     //     backgroundColor: Colors.black,
+//     //     actions: [
+//     //       IconButton(
+//     //         icon: Icon(Icons.crop_rotate),
+//     //         onPressed: () {
+//     //           // Handle the action for saving or using the captured image
+//     //           // For example, you might want to save it to a gallery or send it
+//     //           //Navigator.pop(context, image); // Return the image to the previous screen
+//     //         },
+//     //       ),
+//     //       IconButton(
+//     //         onPressed: () {},
+//     //         icon: Icon(Icons.emoji_emotions_outlined),
+//     //       ),
+//     //       IconButton(onPressed: () {}, icon: Icon(Icons.title)),
+//     //       IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+//     //     ],
+//     //   ),
+//     //   body: GestureDetector(
+//     //     onTap: () async {
+//     //       final XFile? photo = await picker.pickImage(
+//     //         source: ImageSource.camera,
+//     //       );
+//     //       if (photo != null) {
+//     //         Navigator.push(
+//     //           context,
+//     //           MaterialPageRoute(
+//     //             builder: (context) => CameraView(image: File(photo.path)),
+//     //           ),
+//     //         );
+//     //       }
+//     //     },
+//     //     onLongPress: () async {
+//     //       final XFile? video = await picker.pickVideo(
+//     //         source: ImageSource.camera,
+//     //       );
+//     //       if (video != null) {
+//     //         Navigator.push(
+//     //           context,
+//     //           MaterialPageRoute(
+//     //             builder: (context) => CameraView(video: File(video.path)),
+//     //           ),
+//     //         );
+//     //       }
+//     //     },
+//     //     child: Icon(Icons.camera_alt, size: 100, color: Colors.grey.shade600),
+//     //   ),
+//     // );
+//   }
+// }
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import 'dart:io';
+
+import 'package:whatsapp_clone/screens/camera_view.dart';
+
+
+class checkCameraTab extends StatefulWidget {
+  const checkCameraTab({super.key});
+
+  @override
+  State<checkCameraTab> createState() => _checkCameraTabState();
+}
+
+class _checkCameraTabState extends State<checkCameraTab> {
+  CameraController? _controller;
+  List<CameraDescription>? _cameras;
+  bool _isRecording = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initCamera();
+  }
+
+  Future<void> _initCamera() async {
+    _cameras = await availableCameras();
+    if (_cameras != null && _cameras!.isNotEmpty) {
+      _controller = CameraController(_cameras![0], ResolutionPreset.high);
+      await _controller!.initialize();
+      if (mounted) setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _capturePhoto() async {
+    if (_controller == null || !_controller!.value.isInitialized) return;
+    final XFile file = await _controller!.takePicture();
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraView(image: File(file.path)),
+      ),
+    );
+  }
+
+  Future<void> _startVideoRecording() async {
+    if (_controller == null || !_controller!.value.isInitialized) return;
+    setState(() {
+      _isRecording = true;
+    });
+    await _controller!.startVideoRecording();
+  }
+
+  Future<void> _stopVideoRecording() async {
+    if (_controller == null || !_controller!.value.isInitialized) return;
+    final XFile file = await _controller!.stopVideoRecording();
+    setState(() {
+      _isRecording = false;
+    });
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CameraView(video: File(file.path)),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_controller == null || !_controller!.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return Stack(
+      children: [
+        CameraPreview(_controller!),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 40.0),
+            child: GestureDetector(
+              onTap: _capturePhoto,
+              onLongPress: _startVideoRecording,
+              onLongPressUp: _stopVideoRecording,
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  color: _isRecording ? Colors.red : Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey, width: 4),
+                ),
+                child: Icon(
+                  _isRecording ? Icons.videocam : Icons.camera_alt,
+                  color: _isRecording ? Colors.white : Colors.black,
+                  size: 36,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

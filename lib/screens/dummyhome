@@ -1,0 +1,139 @@
+import 'package:whatsapp_clone/pages/calls_page.dart';
+//import 'package:whatsapp_clone/pages/camera_page.dart';
+import 'package:whatsapp_clone/pages/chat_page.dart';
+import 'package:whatsapp_clone/pages/check_camera_page.dart';
+import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/pages/status_page.dart';
+//import 'package:google_fonts/google_fonts.dart';
+
+class Dummyhome extends StatefulWidget {
+  const Dummyhome({super.key});
+
+  @override
+  State<Dummyhome> createState() => _Dummyhome();
+}
+
+class _Dummyhome extends State<Dummyhome> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this, initialIndex: 1);
+    _tabController.addListener(() async {
+      // This triggers on both tap and swipe
+      if (_tabController.indexIsChanging) return;
+      if (_tabController.index == 0) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CheckCameraPage()),
+        );
+        if (mounted) {
+          _tabController.index = 1; // Always return to chat tab after camera
+        }
+      }
+    });
+
+    // _tabController.addListener(() {
+    //   if (_tabController.indexIsChanging) return; // Prevent double triggers
+    //   if (_tabController.index == 0) {
+    //     CheckCameraPage();
+    //   }
+    // });
+  }
+
+  // Future<void> pickImageFromCamera() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? pickedFile = await picker.pickImage(
+  //     source: ImageSource.camera,
+  //   );
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //     print("Image picked: ${_image!.path}");
+  //   } else {
+  //     print('No image selected.');
+  //   }
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('dummy home Whatsapp'),
+        //backgroundColor: Color(0xFF075E54),
+        // foregroundColor: Colors.white,
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          PopupMenuButton(
+            onSelected: (value) {
+              print(value);
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(value: 'new_group', child: Text('New Group')),
+                PopupMenuItem(
+                  value: 'new_community',
+                  child: Text('New Community'),
+                ),
+                PopupMenuItem(
+                  value: 'broadcase_list',
+                  child: Text('Broadcast Lists'),
+                ),
+                PopupMenuItem(
+                  value: 'linked_devices',
+                  child: Text('Linked Devices'),
+                ),
+                PopupMenuItem(
+                  value: 'starred_messages',
+                  child: Text("Starred Messages"),
+                ),
+                PopupMenuItem(value: 'settings', child: Text('Settings')),
+              ];
+            },
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+
+          // onTap: (index) {
+          //   if (index == 0) {
+          //     showDialog(
+          //       context: context,
+          //       barrierDismissible:
+          //           false, // Prevent dismissing the dialog manually
+          //       builder: (context) =>
+          //           Center(child: Text('Opening Camera... from tab bar')),
+          //     );
+
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => CheckCameraPage()),
+          //     ).then((value) {
+          //       Navigator.pop(context); // Close the loading dialog
+          //       _tabController.index = 1; // Switch back to Chats tab
+          //     });
+          //   }
+          // },
+          tabs: [
+            Tab(icon: Icon(Icons.camera_alt)),
+            Tab(text: 'CHATS'),
+            Tab(text: 'STATUS'),
+            Tab(text: 'CALLS'),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          Center(child: Container()),
+          Center(child: ChatPage()),
+          Center(child: StatusPage()),
+          Center(child: CallsPage()),
+        ],
+      ),
+    );
+  }
+}
