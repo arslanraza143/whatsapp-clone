@@ -66,8 +66,10 @@ class _SpecificChatScreenState extends State<SpecificChatScreen> {
 
   void connect(ChatCustomCard? chat) {
     socket = IO.io(
+//    "https://aa09a796-8ac1-40e3-8d0f-c5329eeebf88-00-2lqyeysxiwbq0.sisko.replit.dev/",
       //"https://aa09a796-8ac1-40e3-8d0f-c5329eeebf88-00-2lqyeysxiwbq0.sisko.replit.dev/",
-      "http://192.168.0.199:5000/",
+      //"http://192.168.18.177:5000/",
+      "https://chatserver-production-e87f.up.railway.app/",
       <String, dynamic>{
         "transports": ["websocket"],
         "autoConnect": false,
@@ -129,7 +131,11 @@ class _SpecificChatScreenState extends State<SpecificChatScreen> {
     print('this is the caption: $message');
     var request = http.MultipartRequest(
       "post",
-      Uri.parse("http://192.168.0.199:5000/routes/addImage"),
+      Uri.parse(
+        "https://chatserver-production-e87f.up.railway.app/routes/addImage"
+        //"http://192.168.18.177:5000/routes/addImage"
+        //"https://aa09a796-8ac1-40e3-8d0f-c5329eeebf88-00-2lqyeysxiwbq0.sisko.replit.dev/",
+        ),
     );
     request.files.add(await http.MultipartFile.fromPath('img', path));
     request.headers.addAll({"content-type": "multipart/form-data"});

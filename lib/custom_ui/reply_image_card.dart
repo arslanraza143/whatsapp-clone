@@ -41,7 +41,8 @@ class _ReplyImageCardState extends State<ReplyImageCard> {
                 children: [
                   Flexible(
                     child: Image.network(
-                      'http://192.168.0.199:5000/uploads/${widget.path}',
+                      //'http://192.168.0.199:5000/uploads/${widget.path}',
+                      'https://chatserver-production-e87f.up.railway.app/uploads/${widget.path}',
                       fit: BoxFit.cover,
                       width: double.infinity,
                       height: double.infinity,
